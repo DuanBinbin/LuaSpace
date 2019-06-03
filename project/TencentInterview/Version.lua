@@ -61,7 +61,7 @@ B = m_class{
 local a = A:new()
 a.name = "hanmeimei"
 a.age = 17
-a.foo()
+a:foo()
 
 local b = B:new()
 b.name = "lilei"
