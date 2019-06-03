@@ -6,8 +6,6 @@ function A:new (o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  name = name or "Default A"
-  age = age or 0
   return o
 end
 
