@@ -6,7 +6,9 @@ function m_class(...)
     function local_table:new(...)
         local tempA = {}
         local Item = {}
-        setmetatable(tempA,{__index = function(t,k)
+        setmetatable(tempA,
+        --__index 类似于C#中的get属性
+        {__index = function(t,k) 
             if Item[k] == nil then
                 if type(local_table[k]) == "function" then
                     local fun = local_table[k]
@@ -19,6 +21,7 @@ function m_class(...)
             end
             return Item[k]
         end,
+        --__newindex 类似于C#中的set属性
         __newindex = function(ta, k, v)
             if type(Item[k]) == "function" then
                 print("函数不能赋值")
@@ -46,6 +49,7 @@ end
 A = m_class{
     name = "string",
     age = 0,
+    --点和冒号的区别：默认self
     foo = function ( self )
         print("from A"..self.name..tostring(self.age))
     end,
