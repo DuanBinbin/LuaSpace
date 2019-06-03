@@ -1,0 +1,41 @@
+function class(...)
+-- TODO
+end
+
+--实现 class 方法
+A = class{
+name = string,
+age = int,
+foo = function()
+print("from A",name,age)
+end,
+}
+
+B = class{
+__super = A,
+foo = function()
+print("from B",name,age)
+end,
+}
+
+local a = A()
+a.name = "hanmeimei"
+a.age = 17
+a:foo()
+
+local b = B()
+b.name = "lilei"
+b.age = 18
+b:foo()
+
+a.name = 20
+a.age = "20"
+b.foo = "x"
+
+-- 输出
+
+-- from Ahanmeimei17
+-- from Blilei18
+-- 类型不匹配：name 的类型是 string
+-- 类型不匹配：age 的类型是 number
+-- 函数不能赋值
