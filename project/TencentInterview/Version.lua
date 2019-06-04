@@ -6,7 +6,7 @@ function m_class(...)
     function local_table:new( ... )
         local tempA = {}
         local Item = {}
-        setmetatable(tempA,{
+        local mt = {
             __index = function ( t,k )
                 if Item[k] == nil then
                     if type(local_table[k]) == "function" then
@@ -31,7 +31,8 @@ function m_class(...)
                 end
                 Item[k] = v
             end
-        })
+        }
+        setmetatable(tempA,mt)
 
         return tempA
     end
