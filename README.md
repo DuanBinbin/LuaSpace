@@ -37,6 +37,8 @@ print(t.key2) `
 
 __newindex：用来对表更新
 
+当为table中一个不存在的索引赋值时，会去调用元表中的__newindex元方法
+
 
 
 元表的使用场景
@@ -61,7 +63,11 @@ Lua中的继承:metetable
 参考文档：
 [脚本之家](https://www.jb51.net/list/list_245_1.htm)
 
+[Lua Tutorial](https://www.tutorialspoint.com/lua/index.htm)
+
 https://www.cnblogs.com/ring1992/p/6000929.html)
+
+
 
 
 
