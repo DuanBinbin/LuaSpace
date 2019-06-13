@@ -65,7 +65,11 @@ Lua中的继承:metetable
 
 [Lua Tutorial](https://www.tutorialspoint.com/lua/index.htm)
 
+[Lua 5.3 参考手册](http://cloudwu.github.io/lua53doc/contents.html)
+
 https://www.cnblogs.com/ring1992/p/6000929.html)
+
+功能
 
 
 
