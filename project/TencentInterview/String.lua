@@ -7,7 +7,7 @@ print(string.char(97,98,99))
 str1 = "He is a (1 + 2) good (3 + 4)!"
 --string.gsub 用来进行数字替换，并且返回替换完毕的字符串和替换字数
 --字符串
-print(string.gsub("i have an apple apple", "apple", "peach"))
+print(string.gsub("i have an (3 - 4) apple", "(3 - 4)", "peach"))
 --函数
 function ff( arg )
     print("function arg : " .. arg)

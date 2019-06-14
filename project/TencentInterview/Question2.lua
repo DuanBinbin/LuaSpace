@@ -2,14 +2,6 @@
 --lua中能够操作100K或者1M的字符串
 local inputParams = "80 + 22 * (33 - 44) / 55 * (15 + 78)"
 
---判断是否可以转化为数字
-srcstr = tonumber(inputParams) 
-if srcstr then
-    print("可以转化为number")        
-else
-    print("不能转化为number")
-end
-
 --自定义函数操作类型
 function add( x,y )
     return x + y
@@ -54,7 +46,6 @@ end
 
 --检查是否存在特殊字符并返回该特殊字符：+ - * /,备注：没有特殊符号的时候如何处理
 function checkSpecialChar( params )
-    print("checkSpecailChar:"..type(params))
     if string.find( params , "%+" ) then
         return "+"
     elseif string.find( params , "%-" ) then
@@ -77,50 +68,70 @@ function split( str,reps )
     return resultStrList
 end
 
+--只能计算 1 * 2这种类型，如果是1 * 2 + 3 就计算不了了
+function  getParenthesisValue( params )
+    --获取操作类型
+    local operator = checkSpecialChar(params)
+    --获取()v中的值，存在在表中
+    t = split(params,operator)
+    --计算
+    print("operator : "..operator.."; value = "..t[1]..", "..t[2])
+    return calculate(operator,t[1],t[2])         
+end
+
+resValue = nil
+
+
+
 --获取运算符( )
 function getParenthesis(params)
+    print("getParenthesis()01 : "..params)
+
     local i,j
     local t = {}
     i = string.find(params,"%(")
     j = string.find(params,"%)")
-    if not i then    
+    if not i then   
+        print("getParenthesis()02 : "..params) 
+        -- return params
+        resValue = params
         return
     end
-    local p = string.sub(params,i + 1,j - 1)  
-    print(checkSpecialChar(p)  ) 
+    --获取()中的内容
+    local p = string.sub(params,i + 1,j - 1)
+    print("() = "..p) 
 
-    --获取操作类型
-    local operator = checkSpecialChar(p)
-    print("operator : "..operator)
+    --计算()中的内容
+    local res = getParenthesisValue(p)  
+    print("res = ".. res)
 
-    --获取()v中的值，存在在表中
-    t1 = split(p,operator)
+    local p1 = string.sub(params,i,j)
+    print("() = "..p1) 
 
-    local res = calculate(operator,t1[1],t1[2])
+    --将计算结果替换为计算内容
+    local params = string.gsub( params, '%b()',res,1 )
+    print("......", params) 
     
-    print("-----"..t1[1],t1[2].." ".. res)
+    getParenthesis(params)
 
-    table.insert(t,res)    
+    --记录()中的结果
+    -- table.insert(t,res)  
 end
 
-str1 = "He is a (8 + 9) good (3 + 4)!"
-demo = "80+22*(33-44)/55*(15+78)..."
---获取小括号
-getParenthesis(demo)
 
--- for k,v in pairs(t1) do
---     print(k,type(v))
--- end
+str1 = "He is a (8 + 9) good (3 + 4)!"
+getParenthesis(inputParams)
+--获取小括号
+print("你妹的",resValue)
+
 
 --用来格式化字符串
 print(string.format("i want %d apples", 5))
 
-s = "80+22*(33-44)/55*(15+78)..."
--- s = "hello world from Lua"
 --利用正则表达式拆分数据
-unknown = string.gmatch(s, '[^%()]+')
+unknown = string.gmatch(str1, '[^%()]+')
 print(unknown) 
-for w in string.gmatch(s, '[^%()]+') do --注意：%a表示单个字母，%a+表示多个字母
+for w in string.gmatch(str1, '[^%()]+') do --注意：%a表示单个字母，%a+表示多个字母
     print(w)    --连续输出每个单词
 end
 
