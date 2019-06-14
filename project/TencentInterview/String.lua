@@ -1,9 +1,13 @@
-
+--用来格式化字符串
+print(string.format("i want %d apples", 5))
 --返回字符串的内部数字编码，i、j为字符串的索引，i、j限定了多少字符就返回多少值
+
 print(string.byte("abcdef",1,3))
 -- 跟byte()相反，把数字编码转换为字符串
+
 print(string.char(97,98,99))
 -- 用来查找匹配的pattern，返回该pattern的索引。找到一个匹配就返回。如果找不到，返回空
+
 str1 = "He is a (1 + 2) good (3 + 4)!"
 --string.gsub 用来进行数字替换，并且返回替换完毕的字符串和替换字数
 --字符串
