@@ -73,3 +73,21 @@ t2 = string.split("abcd(ae)fg","(")
 for k,v in pairs(t2) do
     print(k,v)
 end
+
+print(string.match('2015-5-12 13:53', '(%d+)-(%d+)-(%d+)')) 
+str3 = string.gsub("80 + 22 * -11 / 55 * 93	","%s","")
+print(str3)
+i,j =  string.match(str3, '([+-]?%d+)%*([+-]?%d+)')
+print(tonumber(i),tonumber(j))
+
+
+-- operatorTableTwo = {}
+-- for i, v in ipairs(operatorTable) do    
+--     if v == "*" or v == "/" then
+--         print("operatorTabale".."k : " .. i .. ", value : " .. type(v) .. " " .. v)
+--         -- mytable[3] = "/"
+--         operatorTableTwo[i] = v
+--     end
+-- end
+
+print(string.find("你的名字 love you 3333.333", "[0-9]+%.*[0-9]*"))

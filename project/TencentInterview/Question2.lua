@@ -120,7 +120,8 @@ function getParenthesis(params)
 end
 getParenthesis(inputParams)
 --获取小括号
-print("三级降为二级", resValue)
+resValue = string.gsub(resValue,"%s","")
+print("三级降为二级",resValue)
 
 --********************至此，三级计算降为二级计算 80 + 22 * -11 / 55 * 93	********************
 --知识点：string常用API，lua中的正则表达式
@@ -157,32 +158,38 @@ printTable(operatorTable)
 
 --******************** START : 分离二级运算符	********************
 
-operatorTableTwo = {}
-for i, v in ipairs(operatorTable) do    
-    if v == "*" or v == "/" then
-        print("operatorTabale".."k : " .. i .. ", value : " .. type(v) .. " " .. v)
-        -- mytable[3] = "/"
-        operatorTableTwo[i] = v
+resValue = string.gsub("80 + 22 * -11 / 55 * 93	","%s","")
+print(resValue)
+
+--[[ [0-9]*%.[0-9]*,表示小数 ]]
+
+function operateMultiply()
+    local i,j = string.match(resValue, '([+-]?%d+)%*([+-]?%d+)')
+    local multiplyValue = multiply(i,j)
+    local pattern = tonumber(i).."*"..tonumber(j)
+    return string.gsub(resValue,'([+-]?%d+)%*([+-]?%d+)',multiplyValue,1)      
+end
+
+function operateDivide()
+    local i,j = string.match(resValue, '([+-]?%d+)%/([+-]?%d+)')
+    local multiplyValue = divide(i,j)
+    local pattern = tonumber(i).."/"..tonumber(j)
+    return string.gsub(resValue,'([+-]?%d+)%/([+-]?%d+)',multiplyValue,1)      
+end
+
+local operatorTableThree = {}
+for i, v in ipairs(operatorTable) do
+    print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
+    if v == "+" or v == "-" then
+        table.insert( operatorTableThree,v )
+    elseif v == "*" then
+        resValue = operateMultiply()        
+    elseif v == "/" then
+        resValue = operateDivide()
     end
+    print(resValue)
 end
 
-print("hahahaha")
-operatorTableTwo["2"] = "*"
-operatorTableTwo["3"] = "/"
-for i, v in ipairs(operatorTableTwo) do
-    print("k : " .. i .. ", value : " .. type(v) .. " " .. v)
-end
+printTable(operatorTableThree)
+
 --******************** END : 分离二级运算符	********************
-print(string.find( "1 * 2 / 5","%b%d[%*%/]" ))
-
-string = string.split(tranString , ",")
-
-string = {1,2,3,4}
-
-string[1]=1
-
-string[2]=2
-
-string[3]=3
-
-string[4]=4
