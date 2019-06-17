@@ -107,17 +107,12 @@ function getParenthesis(params)
     local params = string.gsub(params, "%b()", res, 1)
 
     getParenthesis(params)
-
-    --记录()中的结果
-    -- table.insert(t,res)
 end
+
 getParenthesis(inputParams)
 --获取小括号
 resValue = string.gsub(resValue,"%s","")
 print("三级降为二级",resValue)
-
---********************至此，三级计算降为二级计算 80 + 22 * -11 / 55 * 93	********************
---知识点：string常用API，lua中的正则表达式
 
 --******************** 分离数据和运算符	********************
 local numberTable = {}
@@ -146,22 +141,19 @@ for w in string.gmatch(tempTable, "[%+%-%*%/]") do --注意：%a表示单个字�
     table.insert(operatorTable,w)
 end
 
-printTable(numberTable)
-printTable(operatorTable)
+-- printTable(numberTable)
+-- printTable(operatorTable)
 
 --******************** END :分离数据和运算符	********************
 
---******************** START : 分离二级运算符	********************
+--******************** START : * / 二级运算	********************
 
 resValue = string.gsub(resValue,"%s","")
-print(resValue)
-
---[[ ([0-9]*%.[0-9]*),表示小数 ；([+-]?%d+)%*([+-]?%d+) ]]
 
 function operateMultiply()
     local i,j 
     if string.find(resValue,"%.") then
-        i,j = string.match(resValue, '([0-9]*%.[0-9]*)%*([+-]?%d+)')
+        i,j = string.match(resValue, '([0-9]*%.[0-9]*)%*([+-]?%d+)') --([0-9]*%.[0-9]*)
     else 
         i,j = string.match(resValue, '([+-]?%d+)%*([+-]?%d+)')
     end
@@ -191,7 +183,7 @@ end
 
 local operatorTableThree = {}
 for i, v in ipairs(operatorTable) do
-    print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
+    -- print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
     if v == "+" or v == "-" then
         table.insert( operatorTableThree,v )
     elseif v == "*" then
@@ -218,15 +210,17 @@ function operateSubtract()
     end          
 end
 
-printTable(operatorTableThree)
+-- printTable(operatorTableThree)
+
 for i, v in ipairs(operatorTableThree) do
-    print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
+    -- print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
 
     if v == "+" then
-        print("计算加法")
+        -- print("计算加法")
     elseif v == "-" then
         resValue = operateSubtract()
     end
     resValue = operateSubtract()
-    print(resValue)
 end
+
+print("输出计算结果：", resValue)

@@ -43,9 +43,12 @@ end
 -- print(string.match("-100", "^[+-]?%d+"))  -- -100
 -- print(string.match("+100", "^[+-]?%d+"))  -- +100
 
-if string.find("80-4.4*93","%.") then
+match = string.match("(1+2)","%b()")
+if match then
     print("true")
 else
     print("false")
 end
 print(string.match("80-4.4*93", '([0-9]*%.[0-9]*)%*([+-]?%d+)')) 
+
+print(string.match("a (enclosed (in) parentheses) line","%b()"))
