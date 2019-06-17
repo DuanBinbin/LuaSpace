@@ -86,32 +86,25 @@ resValue = nil
 
 --获取运算符( )
 function getParenthesis(params)
-    -- print("getParenthesis()01 : "..params)
 
     local i, j
     local t = {}
     i = string.find(params, "%(")
     j = string.find(params, "%)")
     if not i then
-        -- print("getParenthesis()02 : "..params)
-        -- return params
         resValue = params
         return
     end
     --获取()中的内容
     local p = string.sub(params, i + 1, j - 1)
-    -- print("() = "..p)
 
     --计算()中的内容
     local res = getParenthesisValue(p)
-    -- print("res = ".. res)
 
     local p1 = string.sub(params, i, j)
-    -- print("() = "..p1)
 
     --将计算结果替换为计算内容
     local params = string.gsub(params, "%b()", res, 1)
-    -- print("......", params)
 
     getParenthesis(params)
 
@@ -128,11 +121,13 @@ print("三级降为二级",resValue)
 
 --******************** 分离数据和运算符	********************
 local numberTable = {}
+--用来替换负数
+local tempTable
 for w in string.gmatch(resValue, "[+-]?%d+") do --注意：%a表示单个字母，%a+表示多个字母;[+-]?%d+,在一段文本内查找一个整数，整数可能带有正负号    
     -- 接 
     local temp = tonumber(w)
     if temp < 0 then
-        resValue = string.gsub(resValue,w,"a",1)
+        tempTable = string.gsub(resValue,w,"a",1)
     end
     table.insert(numberTable, temp)
 end
@@ -147,7 +142,7 @@ end
 
 -- 操作字符 --[^%d]
 local operatorTable = {}
-for w in string.gmatch(resValue, "[%+%-%*%/]") do --注意：%a表示单个字母，%a+表示多个字母;[+-]?%d+,在一段文本内查找一个整数，整数可能带有正负号
+for w in string.gmatch(tempTable, "[%+%-%*%/]") do --注意：%a表示单个字母，%a+表示多个字母;[+-]?%d+,在一段文本内查找一个整数，整数可能带有正负号
     table.insert(operatorTable,w)
 end
 
@@ -158,20 +153,37 @@ printTable(operatorTable)
 
 --******************** START : 分离二级运算符	********************
 
-resValue = string.gsub("80 + 22 * -11 / 55 * 93	","%s","")
+resValue = string.gsub(resValue,"%s","")
 print(resValue)
 
 --[[ ([0-9]*%.[0-9]*),表示小数 ；([+-]?%d+)%*([+-]?%d+) ]]
 
 function operateMultiply()
-    local i,j = string.match(resValue, '([+-]?%d+)%*([+-]?%d+)')
+    local i,j 
+    if string.find(resValue,"%.") then
+        i,j = string.match(resValue, '([0-9]*%.[0-9]*)%*([+-]?%d+)')
+    else 
+        i,j = string.match(resValue, '([+-]?%d+)%*([+-]?%d+)')
+    end
     local multiplyValue = multiply(i,j)
     local pattern = tonumber(i).."*"..tonumber(j)
-    return string.gsub(resValue,'([+-]?%d+)%*([+-]?%d+)',multiplyValue,1)      
+    if string.find(resValue,"%.") then
+        return string.gsub(resValue,'([0-9]*%.[0-9]*)%*([+-]?%d+)',multiplyValue,1)
+    else 
+        return string.gsub(resValue,'([+-]?%d+)%*([+-]?%d+)',multiplyValue,1)
+    end
+          
 end
 
 function operateDivide()
-    local i,j = string.match(resValue, '([+-]?%d+)%/([+-]?%d+)')
+    local i,j 
+
+    if string.find(resValue,"%.") then
+        i,j = string.match(resValue, '([0-9]*%.[0-9]*)%/([+-]?%d+)')
+    else 
+        i,j = string.match(resValue, '([+-]?%d+)%/([+-]?%d+)')
+    end
+        
     local multiplyValue = divide(i,j)
     local pattern = tonumber(i).."/"..tonumber(j)
     return string.gsub(resValue,'([+-]?%d+)%/([+-]?%d+)',multiplyValue,1)      
@@ -190,6 +202,31 @@ for i, v in ipairs(operatorTable) do
     print(resValue)
 end
 
-printTable(operatorTableThree)
+function operateSubtract()
+    local i,j 
+    if string.find(resValue,"%.") then
+        i,j = string.match(resValue, '([+-]?%d+)%-([0-9]*%.[0-9]*)')
+    else 
+        i,j = string.match(resValue, '([+-]?%d+)%-([+-]?%d+)')
+    end
+    local multiplyValue = subtract(i,j)
+    local pattern = tonumber(i).."-"..tonumber(j)
+    if string.find(resValue,"%.") then
+        return string.gsub(resValue,'([+-]?%d+)%-([0-9]*%.[0-9]*)',multiplyValue,1)
+    else 
+        return string.gsub(resValue,'([+-]?%d+)%-([+-]?%d+)',multiplyValue,1)
+    end          
+end
 
---******************** END : 分离二级运算符	********************
+printTable(operatorTableThree)
+for i, v in ipairs(operatorTableThree) do
+    print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
+
+    if v == "+" then
+        print("计算加法")
+    elseif v == "-" then
+        resValue = operateSubtract()
+    end
+    resValue = operateSubtract()
+    print(resValue)
+end
