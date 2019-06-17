@@ -35,3 +35,11 @@ for w in string.gmatch("80 + 22 * -11 / 55 * 93", '%d+') do --注意：%a表示�
 end
 
 print(string.gsub( "ni de ming zi shi -1","-1","efg"))
+
+print(string.match("abc100", "[+-]?%d+"))  -- 100
+print(string.match("abc-100", "[+-]?%d+"))  -- -100
+print(string.match("abc+100", "[+-]?%d+"))  -- +100
+
+print(string.match("100", "^[+-]?%d+"))  -- 100
+print(string.match("-100", "^[+-]?%d+"))  -- -100
+print(string.match("+100", "^[+-]?%d+"))  -- +100

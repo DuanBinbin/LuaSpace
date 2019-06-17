@@ -164,17 +164,17 @@ print(resValue)
 --[[ ([0-9]*%.[0-9]*),表示小数 ；([+-]?%d+)%*([+-]?%d+) ]]
 
 function operateMultiply()
-    local i,j = string.match(resValue, '([0-9]*%.[0-9]*)%*([0-9]*%.[0-9]*)')
+    local i,j = string.match(resValue, '([+-]?%d+)%*([+-]?%d+)')
     local multiplyValue = multiply(i,j)
     local pattern = tonumber(i).."*"..tonumber(j)
-    return string.gsub(resValue,'([0-9]*%.[0-9]*)%*([0-9]*%.[0-9]*)',multiplyValue,1)      
+    return string.gsub(resValue,'([+-]?%d+)%*([+-]?%d+)',multiplyValue,1)      
 end
 
 function operateDivide()
-    local i,j = string.match(resValue, '([0-9]*%.[0-9]*)%/([0-9]*%.[0-9]*)')
+    local i,j = string.match(resValue, '([+-]?%d+)%/([+-]?%d+)')
     local multiplyValue = divide(i,j)
     local pattern = tonumber(i).."/"..tonumber(j)
-    return string.gsub(resValue,'([0-9]*%.[0-9]*)%/([0-9]*%.[0-9]*)',multiplyValue,1)      
+    return string.gsub(resValue,'([+-]?%d+)%/([+-]?%d+)',multiplyValue,1)      
 end
 
 local operatorTableThree = {}
