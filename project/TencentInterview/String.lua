@@ -91,3 +91,8 @@ print(tonumber(i),tonumber(j))
 -- end
 
 print(string.find("你的名字 love you 3333.333", "[0-9]+%.*[0-9]*"))
+
+--首位去除空格
+function trim(s)
+    return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+end

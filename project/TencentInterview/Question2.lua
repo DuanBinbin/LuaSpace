@@ -38,11 +38,6 @@ function calcultor(params)
     end
 end
 
---首位去除空格
-function trim(s)
-    return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-end
-
 --检查是否存在特殊字符并返回该特殊字符：+ - * /,备注：没有特殊符号的时候如何处理
 function checkSpecialChar(params)
     if string.find(params, "%+") then
@@ -63,7 +58,7 @@ function split(str, reps)
     local resultStrList = {}
     string.gsub(
         str,
-        "[^%" .. reps .. "]+",
+        "[^&(%" .. reps .. "%)]+", --"[^%" .. reps .. "]+",
         function(w)
             table.insert(resultStrList, tonumber(w))
         end
@@ -71,44 +66,35 @@ function split(str, reps)
     return resultStrList
 end
 
---只能计算 1 * 2这种类型，如果是1 * 2 + 3 就计算不了了
-function getParenthesisValue(params)
-    --获取操作类型
-    local operator = checkSpecialChar(params)
-    --获取()v中的值，存在在表中
-    t = split(params, operator)
-    --计算
-    print("operator : " .. operator .. "; value = " .. t[1] .. ", " .. t[2])
-    return calculate(operator, t[1], t[2])
-end
-
 resValue = nil
 
---获取运算符( )
-function getParenthesis(params)
+--第一步：数据格式化，去除空
+inputParams = string.gsub(inputParams,"%s","%1")
 
-    local i, j
-    local t = {}
-    i = string.find(params, "%(")
-    j = string.find(params, "%)")
-    if not i then
+--第二步：计算()一级运算符
+function getParenthesis(params)
+    --判断是否存在()
+    local isContinue = string.find(params, "%b()") 
+    if not isContinue then
         resValue = params
         return
     end
-    --获取()中的内容
-    local p = string.sub(params, i + 1, j - 1)
-
-    --计算()中的内容
-    local res = getParenthesisValue(p)
-
-    local p1 = string.sub(params, i, j)
+    -- 处理值
+    --获取:(33 + 44)
+    local testStr1 = string.match(params,"%b()")
+    --获取()中的操作符
+    local operator = checkSpecialChar(testStr1)
+    --获取()中的数字
+    local table = split(testStr1,operator)
+    --计算
+    local res = calculate(operator,table[1],table[2])
 
     --将计算结果替换为计算内容
     local params = string.gsub(params, "%b()", res, 1)
 
+    --递归
     getParenthesis(params)
 end
-
 getParenthesis(inputParams)
 --获取小括号
 resValue = string.gsub(resValue,"%s","")
@@ -147,9 +133,6 @@ end
 --******************** END :分离数据和运算符	********************
 
 --******************** START : * / 二级运算	********************
-
-resValue = string.gsub(resValue,"%s","")
-
 function operateMultiply()
     local i,j 
     if string.find(resValue,"%.") then
@@ -210,11 +193,8 @@ function operateSubtract()
     end          
 end
 
--- printTable(operatorTableThree)
-
 for i, v in ipairs(operatorTableThree) do
     -- print("----k : " .. i .. ", value : " .. type(v) .. " " .. v)
-
     if v == "+" then
         -- print("计算加法")
     elseif v == "-" then

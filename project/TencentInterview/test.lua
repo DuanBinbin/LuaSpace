@@ -43,12 +43,33 @@ end
 -- print(string.match("-100", "^[+-]?%d+"))  -- -100
 -- print(string.match("+100", "^[+-]?%d+"))  -- +100
 
-match = string.match("(1+2)","%b()")
+match = string.find("(1+2)","%b()")
+
 if match then
     print("true")
 else
     print("false")
 end
-print(string.match("80-4.4*93", '([0-9]*%.[0-9]*)%*([+-]?%d+)')) 
 
-print(string.match("a (enclosed (in) parentheses) line","%b()"))
+local testStr1 = string.match("80 + 22 * (33 - 44) / 55 * (15 + 78)","%b()")
+print(string.gsub(testStr1,"%s",""))
+
+print("****",string.find(testStr1,"%b()"))
+
+--分割字符串
+function split(str, reps)
+    local resultStrList = {}
+    string.gsub(
+        str,
+        "[^&(%" .. reps .. "%)]+",
+        function(w)
+            table.insert(resultStrList, tonumber(w))
+        end
+    )
+    return resultStrList
+end
+
+local table1 = split(testStr1,"-")
+print(table1[2],table1[1]) 
+
+print(string.match(testStr1,"[^&(%" .. "-" .. "%)]+"))
