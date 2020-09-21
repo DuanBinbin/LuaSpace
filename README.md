@@ -73,9 +73,84 @@ https://www.cnblogs.com/ring1992/p/6000929.html)
 
 
 
+# Lua中不能不清楚的知识点
+
+## 1. for循环中pairs和ipairs的区别
+
+使用 `ipairs` 对数组进行遍历时，只会从 1 遍历到索引中断处
 
 
 
+2. Lua中":"和"."的区别
+
+```Lua
+--(1)冒号定义
+function class:test()
+　　--这里会接受self参数，比如
+　　print(self.a,self.b)
+　　--在这里self就是class对象本身，因此不会出错
+end
+
+--(2)点号定义
+function class.test()
+　　--点号定义时，默认不会接受self参数，因此在这里用self会出错，找不到全局变量self，当然如果你把self定义成了一个全局变量的话。。。那么你赢了。。
+　　print(self.a,self.b)--报错，找不到全局变量self
+end
+```
+
+## 2. 关于表长度的计算
+
+```Lua
+a = {}
+for i=1,5 do
+  a[i] = 0
+end
+a[8] = 0                        -- 虽然索引不连贯，但长度是以最大索引为准
+print(#a)
+a[100] = 0                      -- 索引不连贯，而且长度不再以最大索引为准了
+print(#a)
+```
+
+结果为：
+
+```Lua
+8
+8
+```
+
+使用`ipairs`对数组进行遍历是，只会从1遍历到索引中断出
+
+```Lua
+for i,v in ipairs(a) do
+  print(i,v)
+end
+```
+
+结果为：
+
+```Lua
+1   0
+2   0
+3   0
+4   0
+5   0
+```
 
 
+
+## 3. 关于对象的模拟
+
+类定义的一般
+
+```Lua
+Account = {balance=100}
+function Account:withdraw(v)
+  self.balance = self.balance - v
+end
+a = Account
+Account = nil
+
+a:withdraw(10)                  -- 没问题，这个时候 self 指向的是a，因此会去寻找 a.balance
+print(a.balance)
+```
 
